@@ -13,7 +13,20 @@
     tools:showIn="@layout/activity_main">
 
     <TextView
+        android:id="@+id/res"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!" />
+
+    <Button
+        android:id="@+id/blocking_api"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/blocking_api"/>
+
+    <Button
+        android:id="@+id/rxjava_api"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/rxjava_api"/>
 </RelativeLayout>

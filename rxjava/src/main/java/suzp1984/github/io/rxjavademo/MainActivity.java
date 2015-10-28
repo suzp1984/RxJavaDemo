@@ -5,16 +5,25 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import suzp1984.github.io.blockingapi.BlockingApi;
+
 public class MainActivity extends AppCompatActivity {
+
+    private final static String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -48,5 +57,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ButterKnife.unbind(this);
+
+        super.onDestroy();
+    }
+
+    @OnClick(R.id.blocking_api)
+    public void onClickedBlockingApi() {
+        // do not running in main threader
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BlockingApi blockingApi = new BlockingApi();
+                Log.e(TAG, blockingApi.run());
+            }
+        }).start();
+    }
+
+    @OnClick(R.id.rxjava_api)
+    public void onClickedRxjavaApi() {
+
     }
 }
