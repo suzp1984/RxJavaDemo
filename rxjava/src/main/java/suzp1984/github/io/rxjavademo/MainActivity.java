@@ -12,6 +12,8 @@ import android.view.MenuItem;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
+import rx.Subscriber;
 import suzp1984.github.io.blockingapi.BlockingApi;
 
 public class MainActivity extends AppCompatActivity {
@@ -80,6 +82,25 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.rxjava_api)
     public void onClickedRxjavaApi() {
+        RxApi rxApi = new RxApi();
+        Observable<String> observable = rxApi.run();
 
+        observable.subscribe(new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+                Log.e(TAG, "onCompleted");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage());
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.e(TAG, "----------");
+                Log.e(TAG, s);
+            }
+        });
     }
 }
