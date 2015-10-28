@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
@@ -78,6 +81,20 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, blockingApi.run());
             }
         }).start();
+    }
+
+    @OnClick(R.id.future_api)
+    public void onClickedFutureApi() {
+        FutureApi futureApi = FutureApi.getInstance();
+
+        Future<String> future = futureApi.run();
+        try {
+            Log.e(TAG, future.get());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClick(R.id.rxjava_api)
