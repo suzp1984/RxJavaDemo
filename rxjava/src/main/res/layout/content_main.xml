@@ -38,4 +38,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/rxjava_api"/>
+
+    <Button
+        android:id="@+id/rxandroid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rxjava_api"
+        android:text="@string/rx_android"/>
+
 </RelativeLayout>

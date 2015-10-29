@@ -19,8 +19,10 @@ import java.util.concurrent.Future;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
+import rx.Observer;
 import rx.Scheduler;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import suzp1984.github.io.blockingapi.BlockingApi;
 
@@ -114,26 +116,45 @@ public class MainActivity extends AppCompatActivity {
         RxApi rxApi = new RxApi();
         Observable<String> observable = rxApi.run();
 
-        //observable.subscribeOn(Schedulers.from(mExecutor));
-        observable.observeOn(Schedulers.newThread());
-        observable.subscribeOn(Schedulers.newThread());
-
-        observable.subscribe(new Subscriber<String>() {
+        observable.subscribe(new Observer<String>() {
             @Override
             public void onCompleted() {
-                Log.e(TAG, "onCompleted");
+                Log.e(TAG, Thread.currentThread().getName() + ": onCompleted");
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, Thread.currentThread().getName() + ": " + e.getMessage());
             }
 
             @Override
             public void onNext(String s) {
                 Log.e(TAG, "----------");
-                Log.e(TAG, s);
+                Log.e(TAG, Thread.currentThread().getName() + ": " + s);
             }
         });
+    }
+
+    @OnClick(R.id.rxandroid)
+    public void onClickedRxAndroid() {
+        Observable.just("a", "b").subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.newThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.e(TAG, Thread.currentThread().getName() + ": onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, Thread.currentThread().getName() + ": " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        Log.e(TAG, "----------");
+                        Log.e(TAG, Thread.currentThread().getName() + ": " + s);
+                    }
+                });
     }
 }
