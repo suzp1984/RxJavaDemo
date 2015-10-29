@@ -2,6 +2,7 @@ package suzp1984.github.io.rxjavademo;
 
 import rx.Observable;
 import rx.functions.Func0;
+import rx.schedulers.Schedulers;
 import suzp1984.github.io.blockingapi.BlockingApi;
 
 /**
@@ -14,10 +15,9 @@ public class RxApi {
             @Override
             public Observable<String> call() {
 
-                return Observable.just(new BlockingApi().run());
+                return Observable.just(new BlockingApi().run()).subscribeOn(Schedulers.newThread()).observeOn(Schedulers.newThread());
             }
         });
-
 
     }
 

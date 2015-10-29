@@ -11,17 +11,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscriber;
+import rx.schedulers.Schedulers;
 import suzp1984.github.io.blockingapi.BlockingApi;
 
 public class MainActivity extends AppCompatActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
+
+    private Executor mExecutor = Executors.newFixedThreadPool(10);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,19 +95,28 @@ public class MainActivity extends AppCompatActivity {
         FutureApi futureApi = FutureApi.getInstance();
 
         Future<String> future = futureApi.run();
-        try {
+
+        // blocking the main thread;
+        /*try {
             Log.e(TAG, future.get());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
-        }
+        }*/
+
+        // un-blocking main thread version
+        new FutureAsyncTask().execute(future);
     }
 
     @OnClick(R.id.rxjava_api)
     public void onClickedRxjavaApi() {
         RxApi rxApi = new RxApi();
         Observable<String> observable = rxApi.run();
+
+        //observable.subscribeOn(Schedulers.from(mExecutor));
+        observable.observeOn(Schedulers.newThread());
+        observable.subscribeOn(Schedulers.newThread());
 
         observable.subscribe(new Subscriber<String>() {
             @Override
